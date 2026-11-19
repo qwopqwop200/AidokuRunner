@@ -60,11 +60,13 @@ public func varInt(_ n: UInt64, data: inout Data) {
 
 public func decodeVarInt<T: FixedWidthInteger>(_ data: Data, currentIndex: inout Data.Index) throws -> T {
     var result: T = 0
-    var shift: T = 0
+    var shift = 0
     while currentIndex < data.endIndex {
         let byte = data[currentIndex]
         currentIndex = data.index(after: currentIndex)
-        result |= T(byte & 0x7F) << shift
+        let payload = T(byte & 0x7F)
+        guard shift < T.bitWidth, payload <= (T.max >> shift) else { break }
+        result |= payload << shift
         if byte & 0x80 == 0 {
             return result
         }

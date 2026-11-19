@@ -19,11 +19,9 @@ public extension WKWebsiteDataStore {
     func clearRecords() async {
         await withCheckedContinuation { continuation in
             fetchDataRecords(ofTypes: Self.allWebsiteDataTypes()) { records in
-                for record in records {
-                    // swiftlint:disable:next no_empty_block
-                    self.removeData(ofTypes: record.dataTypes, for: [record]) {}
+                self.removeData(ofTypes: Self.allWebsiteDataTypes(), for: records) {
+                    continuation.resume()
                 }
-                continuation.resume()
             }
         }
     }
