@@ -35,14 +35,14 @@ struct AidokuRunnerTests {
         return (ptr, Int32(data.count))
     }
 
-    @Test(.disabled("Source is native-only; it never executes main.wasm")) func testLoadSource() async throws {
+    @Test func testLoadSource() async throws {
         let source = try await self.source()
         #expect(source.key == "test")
         #expect(source.name == "Test")
         #expect(source.version == 1)
     }
 
-    @Test(.disabled("Source is native-only; it never executes main.wasm")) func testSourcePanic() async throws {
+    @Test func testSourcePanic() async throws {
         let source = try await self.source()
         await #expect(throws: Wasm3Error.trap(.unreachable)) {
             try await source.getMangaUpdate(manga: .init(sourceKey: "", key: "", title: ""), needsDetails: false, needsChapters: false)
